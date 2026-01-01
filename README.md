@@ -48,5 +48,6 @@ python3 GRsync.py -d [DirectoryName] -f [FileName]
 ```
 
 ## License / Origins
-* Original Python 2 script: Created by clyang / [GRsync](https://github.com/clyang/GRsync)
-* 
+* **Original Python 2 script:** Created by [clyang / GRsync](https://github.com/clyang/GRsync)
+* **Python 3 port:** Updated by [zaka](https://zakazukuri.com/ricoh-digital-camera-gr-iii-wifi-photo-transfer/)
+* **HDF Support & Fixes:** Updated by @[no-ra-inu](https://github.com/your-profile)
