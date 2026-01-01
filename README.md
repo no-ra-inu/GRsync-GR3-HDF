@@ -1,4 +1,4 @@
-# GRsync (Python 3 Edition)
+# GRsync (Python 3 Edition) V1.1.0
 
 このPythonスクリプトはImageSyncの仕組みを利用し、**GR II / GR III / GR IIIx / GR III HDF / GR IIIx HDF**とPC（Windows / Mac OS）を直接Wi-Fi接続して写真の転送を行います。  
 *（GR IVは未検証です。`SUPPORT_DEVICE`リストに追加することで対応できる可能性があります。）*  
