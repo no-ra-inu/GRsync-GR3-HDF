@@ -1,8 +1,14 @@
-# GRsync (Python 3 Edition) V1.1.0
+# GRsync (Python 3 Edition) V1.1.1
 
-このPythonスクリプトはImageSyncの仕組みを利用し、**GR II / GR III / GR IIIx / GR III HDF / GR IIIx HDF**とPC（Windows / Mac OS）を直接Wi-Fi接続して写真の転送を行います。  
-*（GR IVは未検証です。`SUPPORT_DEVICE`リストに追加することで対応できる可能性があります。）*  
- 
+このPythonスクリプトはImageSyncの仕組みを利用し、**GR II / GR III series / GR IV series**とPC（Windows / Mac OS）を直接Wi-Fi接続して写真の転送を行います。  
+*（GR IV Monochromeで利用できました）*  
+
+
+---
+
+##  SUPPORT DEVICE ListにGR IVシリーズを追加
+使い方は概ね同じですが、GR IVのWi-fi起動はアプリ「GR World」から行い、SSID起動後PCだけ接続。
+（スマートフォンはアプリの画面で「（SSID）に接続しますか？」がポップアップしても「いいえ」、もしくはそのまま放置で対応）
 
 ---
 
@@ -76,8 +82,13 @@ python3 GRsync.py -d 100RICOH -f R0000001.JPG -tf
 
 # GRsync (Python 3 Edition)
 
-This Python script uses the ImageSync API to transfer photos directly via Wi-Fi from **RICOH GR II / GR III / GR IIIx / GR III HDF / GR IIIx HDF** to your PC (Windows / Mac OS).  
-*(Note: GR IV is not yet verified. It might work by adding it to the `SUPPORT_DEVICE` list.)*  
+This Python script uses the ImageSync mechanism to transfer photos via a direct Wi-Fi connection between a GR II / GR III series / GR IV series camera and a PC (Windows / macOS).
+(Confirmed working with the GR IV Monochrome)
+
+---
+## Added GR IV series to the SUPPORT DEVICE list
+Usage is largely the same, but for the GR IV, Wi-Fi must be started from the "GR World" app. Once the SSID is active, connect only the PC to it.
+(On the smartphone, if a "Connect to (SSID)?" popup appears in the app, tap "No" or simply leave it — don't connect the phone.)
 
 ---
 
