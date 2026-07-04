@@ -36,7 +36,10 @@ SUPPORT_DEVICE = [
     'RICOH GR III', 
     'RICOH GR IIIx', 
     'RICOH GR III HDF', 
-    'RICOH GR IIIx HDF'
+    'RICOH GR IIIx HDF',
+    'RICOH GR IV',
+    'RICOH GR IV HDF',
+    'RICOH GR IV Monochrome'
 ]
 DEVICE = "GR2"
 
