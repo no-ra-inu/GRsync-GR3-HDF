@@ -1,4 +1,4 @@
-# GRsync (Python 3 Edition) V1.1.1
+# GRsync (Python 3 Edition) V1.1.2
 
 このPythonスクリプトはImageSyncの仕組みを利用し、**GR II / GR III series / GR IV series**とPC（Windows / Mac OS）を直接Wi-Fi接続して写真の転送を行います。  
 *（GR IV Monochromeで利用できました）*  
@@ -49,7 +49,8 @@ python3 GRsync.py -d [DirectoryName] -f [FileName]
 
 ### -tf オプションの使い方
 
-`-tf`（または `--timestamp-folder`）オプションは、カメラのフォルダ構造ではなく「ダウンロードした日時」ごとに写真を整理したい場合に便利です。
+`-tf`（または `--timestamp-folder`）オプションは、カメラのフォルダ構造ではなく「ダウンロードした日時」ごとに写真を整理したい場合に便利です。  
+現在は、JPG は日時フォルダ直下に保存され、DNG は `DNG/` サブフォルダに保存されます。
 
 ##### Example Command / 実行例
 
@@ -67,8 +68,8 @@ python3 GRsync.py -d 100RICOH -f R0000001.JPG -tf
 
 | Mode | パスの例 | 説明 |
 |:---|:---|:---|
-| **Without `-tf` (Default)** | `.../GR3/100RICOH/R0000001.JPG` | カメラ側のフォルダ構造を維持します。 |
-| **With `-tf`** | `.../GR3/20260101-1200/R0000001.JPG` | **フラット構造。** すべてのファイルが日時フォルダの直下に保存されます。 |
+| **Without `-tf` (Default)** | `.../GR3/100RICOH/R0000001.JPG` / `.../GR3/100RICOH/DNG/R0000001.DNG` | カメラ側のフォルダ構造を維持し、DNG は各フォルダ内の `DNG/` に保存します。 |
+| **With `-tf`** | `.../GR3/20260101-1200/R0000001.JPG` / `.../GR3/20260101-1200/DNG/R0000001.DNG` | JPG は日時フォルダ直下、DNG は `DNG/` に保存されます。 |
 
 ---
 
@@ -129,7 +130,8 @@ python3 GRsync.py -d [DirectoryName] -f [FileName]
 
 ### How to use the `-tf` option / -
 
-The `-tf` (or `--timestamp-folder`) option is useful when you want to organize your photos by "download date" rather than camera directory structure.
+The `-tf` (or `--timestamp-folder`) option is useful when you want to organize your photos by "download date" rather than camera directory structure.  
+JPG files are saved directly under the timestamp folder, while DNG files are saved under a `DNG/` subfolder.
 
 ##### Example Command
 
@@ -147,8 +149,8 @@ python3 GRsync.py -d 100RICOH -f R0000001.JPG -tf
 
 | Mode | Path Example | Description |
 |:---|:---|:---|
-| **Without `-tf` (Default)** | `.../GR3/100RICOH/R0000001.JPG` | Maintains camera directory structure. |
-| **With `-tf`** | `.../GR3/20260101-1200/R0000001.JPG` | **Flat structure.** All files are saved directly under the timestamp folder. |
+| **Without `-tf` (Default)** | `.../GR3/100RICOH/R0000001.JPG` / `.../GR3/100RICOH/DNG/R0000001.DNG` | Maintains camera directory structure, and stores DNG files under `DNG/` inside each folder. |
+| **With `-tf`** | `.../GR3/20260101-1200/R0000001.JPG` / `.../GR3/20260101-1200/DNG/R0000001.DNG` | JPG files go directly under the timestamp folder, and DNG files go under `DNG/`. |
 
 ---
 
