@@ -12,7 +12,7 @@ import os
 from datetime import datetime
 
 # Base directory for photos
-PHOTO_DEST_BASE = "/Volumes/SD Data/Photo-GR/00 temp/"
+PHOTO_DEST_BASE = "" #格納するフォルダ名を入力
 
 # GR_HOST is FIXED. DO NOT CHANGE!!
 GR_HOST = "http://192.168.0.1/"
