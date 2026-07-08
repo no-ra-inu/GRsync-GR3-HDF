@@ -12,7 +12,7 @@ import os
 from datetime import datetime
 
 # Base directory for photos
-PHOTO_DEST_BASE = "" #格納するフォルダ名を入力
+PHOTO_DEST_BASE = "/Volumes/SD Data/Photo-GR/00 temp/"
 
 # GR_HOST is FIXED. DO NOT CHANGE!!
 GR_HOST = "http://192.168.0.1/"
@@ -77,23 +77,22 @@ def getPhotoList():
         print("Error fetching photo list: %s" % e)
         sys.exit(1)
 
+def getLocalPath(photouri, dest_root, useTimestamp):
+    filename = os.path.basename(photouri)
+    ext = os.path.splitext(filename)[1].lower()
+    if useTimestamp:
+        if ext == ".dng":
+            return os.path.join(dest_root, "DNG", filename).replace('\\', '/')
+        return os.path.join(dest_root, filename).replace('\\', '/')
+    else:
+        photo_dir = os.path.dirname(photouri)
+        if ext == ".dng":
+            return os.path.join(dest_root, photo_dir, "DNG", filename).replace('\\', '/')
+        return os.path.join(dest_root, photouri).replace('\\', '/')
+
 def fetchPhotoWithProgress(photouri, dest_root, useTimestamp, count, total):
     """Downloads a photo with progress bar."""
-    if useTimestamp:
-        # -tf 指定時はファイル名のみ抽出して日付フォルダに保存
-        filename = os.path.basename(photouri)
-        if os.path.splitext(filename)[1].lower() == ".dng":
-            local_path = os.path.join(dest_root, "DNG", filename).replace('\\', '/')
-        else:
-            local_path = os.path.join(dest_root, filename).replace('\\', '/')
-    else:
-        # 通常時はカメラのディレクトリ構造（100RICOH等）を維持
-        filename = os.path.basename(photouri)
-        photo_dir = os.path.dirname(photouri)
-        if os.path.splitext(filename)[1].lower() == ".dng":
-            local_path = os.path.join(dest_root, photo_dir, "DNG", filename).replace('\\', '/')
-        else:
-            local_path = os.path.join(dest_root, photouri).replace('\\', '/')
+    local_path = getLocalPath(photouri, dest_root, useTimestamp)
 
     local_dir = os.path.dirname(local_path)
     if not os.path.exists(local_dir):
@@ -147,7 +146,7 @@ def shutdownGR():
 
 def downloadPhotos(isAll, useTimestamp):
     if useTimestamp:
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M")
+        timestamp = datetime.now().strftime("%Y%m%d")
         dest_root = os.path.join(PHOTO_DEST_BASE, timestamp).replace('\\', '/')
     else:
         dest_root = PHOTO_DEST_BASE
@@ -162,7 +161,18 @@ def downloadPhotos(isAll, useTimestamp):
             print(f"File {starturi} not found.")
             sys.exit(1)
 
+    original_count = len(photoLists)
+    photoLists = [p for p in photoLists if not os.path.exists(getLocalPath(p, dest_root, useTimestamp))]
+    skipped = original_count - len(photoLists)
+    if skipped > 0:
+        print(f"Already downloaded: {skipped} files skipped.")
+
     totalPhoto = len(photoLists)
+    if totalPhoto == 0:
+        print(f"Nothing to download. All files already in {dest_root}")
+        shutdownGR()
+        return
+
     print(f"Downloading {totalPhoto} photos to {dest_root}...")
 
     for i, photouri in enumerate(photoLists, 1):
