@@ -1,8 +1,24 @@
-# GRsync (Python 3 Edition) V1.1.2
+# GRsync (Python 3 Edition) V1.2.0
 
 このPythonスクリプトはImageSyncの仕組みを利用し、**GR II / GR III series / GR IV series**とPC（Windows / Mac OS）を直接Wi-Fi接続して写真の転送を行います。  
 *（GR IV Monochromeで利用できました）*  
 
+
+---
+
+## V1.2.0 変更点：差分ダウンロード（レジューム対応）
+
+### `-tf` フォルダ名を `YYYYMMDD-HHMM` → `YYYYMMDD` に変更
+
+以前は実行時刻を含む `20260101-1200` のようなフォルダ名だったため、転送途中で失敗し再実行すると別フォルダが作成されていました。  
+**同日中は同じフォルダ（例：`20260101`）を使い回すよう変更しました。**
+
+### 差分ダウンロード（全モード対応）
+
+`-tf` の有無に関わらず、ダウンロード開始前にカメラのファイルリストと転送先フォルダのファイルリストを比較し、**未転送ファイルのみをダウンロード**します。
+
+- 途中で失敗しても、再実行するとスキップ件数を表示して続きから取り込みます。
+- 全ファイルが取得済みの場合は「Nothing to download.」と表示して終了します。
 
 ---
 
@@ -49,17 +65,18 @@ python3 GRsync.py -d [DirectoryName] -f [FileName]
 
 ### -tf オプションの使い方
 
-`-tf`（または `--timestamp-folder`）オプションは、カメラのフォルダ構造ではなく「ダウンロードした日時」ごとに写真を整理したい場合に便利です。  
-現在は、JPG は日時フォルダ直下に保存され、DNG は `DNG/` サブフォルダに保存されます。
+`-tf`（または `--timestamp-folder`）オプションは、カメラのフォルダ構造ではなく「ダウンロードした日付」ごとに写真を整理したい場合に便利です。  
+JPG は日付フォルダ直下に保存され、DNG は `DNG/` サブフォルダに保存されます。  
+同日に再実行した場合は同じ日付フォルダを使い回し、未転送ファイルのみダウンロードします。
 
 ##### Example Command / 実行例
 
-すべての写真を新しい日時フォルダにダウンロードする:
+すべての写真を日付フォルダにダウンロードする:
 ```bash
 python3 GRsync.py -a -tf
 ```
 
-2. 特定のファイル以降を日時フォルダにダウンロードする:  
+特定のファイル以降を日付フォルダにダウンロードする:  
 ```bash
 python3 GRsync.py -d 100RICOH -f R0000001.JPG -tf
 ```
@@ -69,7 +86,7 @@ python3 GRsync.py -d 100RICOH -f R0000001.JPG -tf
 | Mode | パスの例 | 説明 |
 |:---|:---|:---|
 | **Without `-tf` (Default)** | `.../GR3/100RICOH/R0000001.JPG` / `.../GR3/100RICOH/DNG/R0000001.DNG` | カメラ側のフォルダ構造を維持し、DNG は各フォルダ内の `DNG/` に保存します。 |
-| **With `-tf`** | `.../GR3/20260101-1200/R0000001.JPG` / `.../GR3/20260101-1200/DNG/R0000001.DNG` | JPG は日時フォルダ直下、DNG は `DNG/` に保存されます。 |
+| **With `-tf`** | `.../GR3/20260101/R0000001.JPG` / `.../GR3/20260101/DNG/R0000001.DNG` | JPG は日付フォルダ直下、DNG は `DNG/` に保存されます。 |
 
 ---
 
@@ -81,12 +98,29 @@ python3 GRsync.py -d 100RICOH -f R0000001.JPG -tf
 
 ---
 
-# GRsync (Python 3 Edition)
+# GRsync (Python 3 Edition) V1.2.0
 
 This Python script uses the ImageSync mechanism to transfer photos via a direct Wi-Fi connection between a GR II / GR III series / GR IV series camera and a PC (Windows / macOS).
 (Confirmed working with the GR IV Monochrome)
 
 ---
+
+## V1.2.0 Changes: Differential Download (Resume Support)
+
+### `-tf` folder name changed from `YYYYMMDD-HHMM` to `YYYYMMDD`
+
+Previously, the folder name included the time (e.g., `20260101-1200`), so a failed transfer followed by a retry would create a new, separate folder.  
+**The folder now uses the date only (e.g., `20260101`), so the same folder is reused for all runs on the same day.**
+
+### Differential download (applies to all modes)
+
+Regardless of whether `-tf` is used, the script now compares the camera's file list against the destination folder before starting, and **downloads only the files not yet transferred**.
+
+- If a transfer fails mid-way, re-running the script will display the number of skipped files and resume from where it left off.
+- If all files are already present, the script prints "Nothing to download." and exits cleanly.
+
+---
+
 ## Added GR IV series to the SUPPORT DEVICE list
 Usage is largely the same, but for the GR IV, Wi-Fi must be started from the "GR World" app. Once the SSID is active, connect only the PC to it.
 (On the smartphone, if a "Connect to (SSID)?" popup appears in the app, tap "No" or simply leave it — don't connect the phone.)
@@ -128,19 +162,20 @@ python3 GRsync.py -a
 python3 GRsync.py -d [DirectoryName] -f [FileName]
 ```
 
-### How to use the `-tf` option / -
+### How to use the `-tf` option
 
-The `-tf` (or `--timestamp-folder`) option is useful when you want to organize your photos by "download date" rather than camera directory structure.  
-JPG files are saved directly under the timestamp folder, while DNG files are saved under a `DNG/` subfolder.
+The `-tf` (or `--timestamp-folder`) option is useful when you want to organize your photos by download date rather than camera directory structure.  
+JPG files are saved directly under the date folder, while DNG files are saved under a `DNG/` subfolder.  
+Re-running on the same day reuses the same date folder and downloads only the missing files.
 
 ##### Example Command
 
-1. Download all photos into a new timestamped folder:
+1. Download all photos into a date folder:
 ```bash
 python3 GRsync.py -a -tf
 ```
 
-2. Download from a specific file into a timestamped folder:
+2. Download from a specific file into a date folder:
 ```bash
 python3 GRsync.py -d 100RICOH -f R0000001.JPG -tf
 ```
@@ -149,8 +184,8 @@ python3 GRsync.py -d 100RICOH -f R0000001.JPG -tf
 
 | Mode | Path Example | Description |
 |:---|:---|:---|
-| **Without `-tf` (Default)** | `.../GR3/100RICOH/R0000001.JPG` / `.../GR3/100RICOH/DNG/R0000001.DNG` | Maintains camera directory structure, and stores DNG files under `DNG/` inside each folder. |
-| **With `-tf`** | `.../GR3/20260101-1200/R0000001.JPG` / `.../GR3/20260101-1200/DNG/R0000001.DNG` | JPG files go directly under the timestamp folder, and DNG files go under `DNG/`. |
+| **Without `-tf` (Default)** | `.../GR3/100RICOH/R0000001.JPG` / `.../GR3/100RICOH/DNG/R0000001.DNG` | Maintains camera directory structure; DNG files are stored under `DNG/` inside each folder. |
+| **With `-tf`** | `.../GR3/20260101/R0000001.JPG` / `.../GR3/20260101/DNG/R0000001.DNG` | JPG files go directly under the date folder; DNG files go under `DNG/`. |
 
 ---
 
